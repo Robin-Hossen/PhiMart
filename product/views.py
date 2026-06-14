@@ -5,21 +5,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from product.models import Product,Category
 from product.serializers import ProductSerializer,CategorySerializer
+from django.db.models import Count
 
 # Create your views here.
 
-@api_view()
-def view_products(request):
-    product=get_object_or_404(Product,pk=id)
-    serializer=ProductSerializer(product)
+# @api_view()
+# def view_products(request):
+#     product=get_object_or_404(Product,pk=id)
+#     serializer=ProductSerializer(product)
 
-    return Response(serializer.data)
-
-
-
-@api_view()
-def view_categories(request):
-    return Response({'message':'Categories'})
+#     return Response(serializer.data)
 
 @api_view()
 def view_products(request):
@@ -31,6 +26,12 @@ def view_products(request):
 def view_specific_product(request):
     product=get_object_or_404(product)
     serializer=ProductSerializer(product)
+    return Response(serializer.data)
+
+@api_view()
+def view_categories(request):
+    categories=Category.objects.annotate(product_count=Count('products')).all()
+    serializer=CategorySerializer(categories,many=True)
     return Response(serializer.data)
 
 
