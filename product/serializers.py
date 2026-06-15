@@ -4,11 +4,12 @@ from product.models import Category,Product
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    product_count=serializers.IntegerField(read_only=True)#read_only means get ar time a data dau post ar time a no need
     class Meta:
         model=Category
         fields=['id','name','description','product_count']
 
-    product_count=serializers.IntegerField()    
+        
 
 
 
