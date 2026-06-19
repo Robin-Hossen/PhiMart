@@ -14,6 +14,13 @@ from rest_framework.permissions import DjangoModelPermissions
 from product.permissions import IsReviewAuthorOrReadonly
 
 class ProductViewSet(ModelViewSet):
+    """
+    API endpoint for managing products in the e-commerce store
+    - Allows authenticated admin to create,update and delete producs
+    - Allows users to brpws and filter product
+    - Support searching by name, description and category
+    - Support ordering by price and updated_at
+    """
     queryset=Product.objects.all()#all product dekhai
     serializer_class=ProductSerializer
     filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
@@ -22,6 +29,13 @@ class ProductViewSet(ModelViewSet):
     search_fields=['name','description','category__name']
     ordering_fields=['price']
     permission_classes=[IsAdminOrReadOnly]
+
+    def list(self, request, *args, **kwargs):
+        """Retive all products"""
+        return super().list(request, *args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        """ only Authenticated Admin can create product"""
+        return super().create(request, *args, **kwargs)
 
 
 class CategoryViewSet(ModelViewSet):
