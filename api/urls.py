@@ -7,20 +7,19 @@ from order.views import CartViewSet,CartItemViewSet,OrderViewSet
 router=routers.DefaultRouter()
 router.register('products',ProductViewSet,basename='products')
 router.register('categories',CategoryViewSet)
+router.register('orders',OrderViewSet,basename='orders')
+router.register('carts',CartViewSet,basename='carts')
+
+
 product_router=routers.NestedDefaultRouter(router,'products',lookup='product')
 product_router.register('reviews',ReviewViewSet,basename='product-review')
 product_router.register('images',ProductImageViewset,basename='product-images')
 
 
 
-router.register('carts',CartViewSet,basename='carts')
+
 cart_router=routers.NestedDefaultRouter(router,'carts',lookup='cart')
 cart_router.register('items',CartItemViewSet,basename='cart-item')
-
-router.register('orders',OrderViewSet,basename='orders')
-
-
-
 
 
 

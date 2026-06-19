@@ -1,6 +1,4 @@
 
-from rest_framework.response import Response
-from rest_framework import status
 from product.models import Product,Category,Review,ProductImage
 from product.serializers import ProductSerializer,CategorySerializer,ReviewSerializer,ProductImageSerializer
 from django.db.models import Count
@@ -9,9 +7,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from product.filters import ProductFilter
 from rest_framework.filters import SearchFilter,OrderingFilter
 from product.pagination import DefaultPagination
-from api.permissions import IsAdminOrReadOnly,FullDjangoModelPermission
-from rest_framework.permissions import DjangoModelPermissions
+from api.permissions import IsAdminOrReadOnly
 from product.permissions import IsReviewAuthorOrReadonly
+from drf_yasg.utils import swagger_auto_schema
 
 class ProductViewSet(ModelViewSet):
     """
@@ -30,9 +28,24 @@ class ProductViewSet(ModelViewSet):
     ordering_fields=['price']
     permission_classes=[IsAdminOrReadOnly]
 
+    @swagger_auto_schema(
+        operation_summary='Retrive a list of products'
+    )
     def list(self, request, *args, **kwargs):
-        """Retive all products"""
+        """Retrive all the products"""
         return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Create a product by admin",
+        operation_description="This allow an admin to create a product",
+        request_body=ProductSerializer,
+        responses={
+            201: ProductSerializer,
+            400: "Bad Request"
+        }
+    )
+    
+
     def create(self, request, *args, **kwargs):
         """ only Authenticated Admin can create product"""
         return super().create(request, *args, **kwargs)
@@ -64,8 +77,9 @@ class ReviewViewSet(ModelViewSet):
 
 
 class ProductImageViewset(ModelViewSet):
-    permission_classes=[IsAdminOrReadOnly]
+    
     serializer_class=ProductImageSerializer
+    permission_classes=[IsAdminOrReadOnly]
     def get_queryset(self):
         return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])#specific dekhar jonne
     
