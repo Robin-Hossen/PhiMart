@@ -12,11 +12,17 @@ class CategorySerializer(serializers.ModelSerializer):
 
         
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ProductImage
+        fields=['id','image']
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    images=ProductImageSerializer(many=True,read_only=True)#onek image thakte pare and image nau dte pari
     class Meta:
         model= Product
-        fields=['id','name','description','price','category','stock','price_with_tax']
+        fields=['id','name','description','price','category','stock','price_with_tax','images']
 
     price_with_tax=serializers.SerializerMethodField(method_name='calculate_tax')
     # category=serializers.HyperlinkedRelatedField(queryset=Category.objects.all(),view_name='view_specific_category')
@@ -30,10 +36,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return price
         
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=ProductImage
-        fields=['id','image']
+
 
 
 
