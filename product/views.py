@@ -1,8 +1,8 @@
 
 from rest_framework.response import Response
 from rest_framework import status
-from product.models import Product,Category,Review
-from product.serializers import ProductSerializer,CategorySerializer,ReviewSerializer
+from product.models import Product,Category,Review,ProductImage
+from product.serializers import ProductSerializer,CategorySerializer,ReviewSerializer,ProductImageSerializer
 from django.db.models import Count
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,7 +14,7 @@ from rest_framework.permissions import DjangoModelPermissions
 from product.permissions import IsReviewAuthorOrReadonly
 
 class ProductViewSet(ModelViewSet):
-    queryset=Product.objects.all()
+    queryset=Product.objects.all()#all product dekhai
     serializer_class=ProductSerializer
     filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class=ProductFilter
@@ -22,23 +22,6 @@ class ProductViewSet(ModelViewSet):
     search_fields=['name','description','category__name']
     ordering_fields=['price']
     permission_classes=[IsAdminOrReadOnly]
-    # permission_classes=[DjangoModelPermissions]
-    # permission_classes=[FullDjangoModelPermission]
-
-    # def get_permissions(self):
-    #     if self.request.method=='GET':
-    #         return [AllowAny()]
-    #     return [IsAdminUser()]
-
-
-
-    def destroy(self, request, *args, **kwargs):
-        product=self.get_object()
-        if product.stock>10:
-            return Response({'message':'product with stock more than 10 could not be deleted'})
-        self.perform_destroy(product)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 
 class CategoryViewSet(ModelViewSet):
@@ -60,14 +43,17 @@ class ReviewViewSet(ModelViewSet):
         serializer.save(user=self.request.user)    
 
     def get_queryset(self):
-        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+        return Review.objects.filter(product_id=self.kwargs['product_pk'])#specific dekhar jonne
 
     def get_serializer_context(self):
         return {'product_id':self.kwargs['product_pk']}
 
 
-
-
-
-
-      
+class ProductImageViewset(ModelViewSet):
+    permission_classes=[IsAdminOrReadOnly]
+    serializer_class=ProductImageSerializer
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])#specific dekhar jonne
+    
+    def perform_create(self, serializer):
+        serializer.save(product_id=self.kwargs['product_pk'])

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal #type casting ar jonne
-from product.models import Category,Product,Review
+from product.models import Category,Product,Review,ProductImage
 from django.contrib.auth import get_user_model
 
 
@@ -11,27 +11,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields=['id','name','description','product_count']
 
         
-
-
-
-
-# class ProductSerializer(serializers.Serializer):
-#     id=serializers.IntegerField()
-#     name=serializers.CharField()
-#     price=serializers.DecimalField(max_digits=10, decimal_places=2)
-
-#     price_with_tax=serializers.SerializerMethodField(method_name='calculate_tax')
-    
-#     #there are 4 way to show category
-
-        
-#     # 1.category=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
-#     # 2.category=serializers.StringRelatedField()
-#     # 3.category=CategorySerializer()
-#     category=serializers.HyperlinkedRelatedField(queryset=Category.objects.all(),view_name='view_specific_category')
-
-#     def calculate_tax(self,product):
-#         return round(product.price*Decimal(1.1),2)#type casting
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -50,6 +29,13 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("price can't be negetive")
         return price
         
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ProductImage
+        fields=['id','image']
+
+
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
