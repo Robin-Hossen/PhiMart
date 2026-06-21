@@ -19,7 +19,7 @@ class ProductViewSet(ModelViewSet):
     - Support searching by name, description and category
     - Support ordering by price and updated_at
     """
-    queryset=Product.objects.all()#all product dekhai
+    # queryset=Product.objects.all()#all product dekhai
     serializer_class=ProductSerializer
     filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
     filterset_class=ProductFilter
@@ -27,6 +27,9 @@ class ProductViewSet(ModelViewSet):
     search_fields=['name','description','category__name']
     ordering_fields=['price']
     permission_classes=[IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        return Product.objects.prefetch_related('images').all()
 
     @swagger_auto_schema(
         operation_summary='Retrive a list of products'
