@@ -9,5 +9,6 @@ class UserSerializer(BaseUserSerialiser):
     class Meta(BaseUserSerialiser.Meta):
         ref_name='CustomUser'
 
-        fields=['id','first_name','last_name','address','email','phone_number']
+        fields=['id','first_name','last_name','address','email','phone_number','is_staff']
+        read_only_fields=['is_staff']
 
