@@ -24,15 +24,16 @@ class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericV
             return Cart.objects.none()
         return Cart.objects.prefetch_related('items__product').filter(user=self.request.user)
 
+
     def create(self,request,*args, **kwargs):
         existing_cart=Cart.objects.filter(user=request.user).first()
         if existing_cart:
             serializer=self.get_serializer(existing_cart)
-            return Response(serializer.data,status=status.HTTP_200_ok)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return super().create(request,*args, **kwargs)
 
         
-      
+
 
 
 
