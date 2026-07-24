@@ -71,6 +71,7 @@ class OrderViewSet(ModelViewSet):
     def update_status(self, request,pk=None):
         order=self.get_object()
         serializer=UpdateOrderSerializer(order,data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({'status':f"Order status updated to {request.data['status']}" })
     
