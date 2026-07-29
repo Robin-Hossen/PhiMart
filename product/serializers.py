@@ -50,7 +50,7 @@ class SimpleUserSerializer(serializers.ModelSerializer):
         model=get_user_model()
         fields=['id','name']
     
-    def get_current_user(self,obj):
+    def get_current_user_name(self,obj):
         return obj.get_full_name()
 
 
