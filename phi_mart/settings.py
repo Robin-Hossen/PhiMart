@@ -107,6 +107,7 @@ DATABASES = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://phi-mart-frontend-wshn.vercel.app",  # Live frontend
     
 ]
 
